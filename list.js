@@ -67,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 網路 IP 鎖定清單
     const ALLOWED_IPS = [
-        "61.219.113.251", // 公司固定 IP
+        "61.219.113.251", // 公司固定 IP1
+        "61.219.113.252", // 公司固定 IP2
         "1.175.177.14"    // 新增的第二個 IP
     ];
 
