@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <!-- 引入 Google Fonts 添加現代活潑的圓潤字體 -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <!-- 登入畫面 -->
     <div id="login-screen" class="login-screen">
@@ -33,7 +35,7 @@
                 <h2>📒 飯店管理系統</h2>
                 <button id="pin-sidebar" class="toggle-btn" title="鎖定選單">🔓</button>
             </div>
-            
+
             <!-- 選單清單的容器，將由 JavaScript 動態產生 -->
             <nav class="folder-tree" id="folder-tree">
                 <!-- 預留結構，後續交給 JS 生成內容 -->
@@ -44,10 +46,10 @@
         <main class="main-content">
             <!-- 展開側邊欄的懸浮按鈕 (一開始是隱藏的) -->
             <button id="show-sidebar" class="float-btn" title="展開選單" style="display: none;">☰</button>
-            
+
             <!-- iframe 用來嵌入 Google Sheet -->
             <iframe id="sheet-frame" src="" frameborder="0" allowfullscreen title="Google Sheet 預覽"></iframe>
-            
+
             <!-- 未選取檔案時的歡迎畫面 -->
             <div class="welcome-screen" id="welcome-screen">
                 <h3>👋 歡迎使用！</h3>
@@ -58,4 +60,5 @@
 
     <script src="list.js"></script>
 </body>
+
 </html>

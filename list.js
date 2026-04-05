@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkLogin = async () => {
         // 1. 先驗證帳號密碼
         if (usernameInput.value === "yaling" && passwordInput.value === "9261366") {
-            
+
             // 2. 帳密正確，準備檢查網路 IP
             loginBtn.innerText = "🌐 網路環境確認中...";
             loginBtn.style.opacity = "0.7";
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // 向外部服務請求目前的公開 IP
                 const response = await fetch('https://api.ipify.org?format=json');
                 if (!response.ok) throw new Error("網路請求失敗");
-                
+
                 const data = await response.json();
                 const currentIP = data.ip;
 
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // IP 不符合
                     loginError.innerHTML = `登入失敗：請連接公司專屬網路！<br><span style="font-size: 0.85rem; color: #888;">(您目前的網路 IP: ${currentIP})</span>`;
                     loginError.style.display = "block";
-                    
+
                     loginBtn.innerText = "重新登入";
                     loginBtn.style.opacity = "1";
                     loginBtn.style.cursor = "pointer";
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // 如果使用者沒連上網，或者 api 壞掉
                 loginError.innerText = "無法取得您的網路 IP 資訊，請確認網路連線是否正常！";
                 loginError.style.display = "block";
-                
+
                 loginBtn.innerText = "重新登入";
                 loginBtn.style.opacity = "1";
                 loginBtn.style.cursor = "pointer";
@@ -226,14 +226,9 @@ document.addEventListener("DOMContentLoaded", () => {
             sheetGroup.appendChild(sheetLinkEl);
         });
 
-        // 滑鼠移入資料夾時自動展開
-        folderEl.addEventListener("mouseenter", () => {
-            folderEl.classList.add("open");
-        });
-
-        // 滑鼠移出整個資料夾區塊時自動收合
-        folderEl.addEventListener("mouseleave", () => {
-            folderEl.classList.remove("open");
+        // 點擊資料夾標題時才展開/收合
+        folderTitle.addEventListener("click", () => {
+            folderEl.classList.toggle("open");
         });
 
         // 將內容組裝起來
