@@ -92,6 +92,20 @@ body {
   padding: 16px 12px;
 }
 
+/* 側面底部資訊區 */
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px dashed var(--border-color);
+  font-size: 0.75rem;
+  color: rgba(180, 160, 150, 0.8); /* 使用暖灰/柔和色系避免太突兀 */
+  text-align: center;
+  line-height: 1.4;
+}
+
+.sidebar-footer p {
+  margin: 0;
+}
+
 .folder {
   margin-bottom: 4px;
 }
