@@ -123,6 +123,20 @@ body {
   display: none;
 }
 
+/* =========================================
+   滑鼠全版感應觸發區
+   ========================================= */
+.hover-trigger {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 25px; /* 感應的寬度，你可以調整這個數字 */
+  height: 100%;
+  z-index: 99; /* 低於漢堡按鈕以免擋住，但大於表格 */
+  cursor: pointer;
+  /* background-color: rgba(255, 0, 0, 0.2); 若你想測試感應區多大，可以解除這行的註解 */
+}
+
 .folder.open > .sub-folder-group {
   display: block;
   animation: fadeInDown 0.3s ease forwards;

@@ -140,12 +140,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const showSidebarBtn = document.getElementById("show-sidebar");
     const sidebar = document.getElementById("sidebar");
     const pinBtn = document.getElementById("pin-sidebar");
+    const hoverTrigger = document.getElementById("hover-trigger");
 
     let isPinned = false; // 紀錄是否鎖定側欄
 
     // 【自動機制】預設進入網頁時將側欄先收起來
     sidebar.classList.add("collapsed");
     showSidebarBtn.style.display = "flex";
+    if (hoverTrigger) hoverTrigger.style.display = "block"; // 顯示透明感應區
 
     // 點擊右上角圖釘/解鎖按鈕
     if (pinBtn) {
@@ -161,17 +163,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 1. 滑鼠「移入」漢堡選單按鈕時 -> 展開側欄
-    showSidebarBtn.addEventListener("mouseenter", () => {
+    // 將展開側欄的邏輯寫成共用函式
+    const expandSidebar = () => {
         sidebar.classList.remove("collapsed");
         showSidebarBtn.style.display = "none";
-    });
+        if (hoverTrigger) hoverTrigger.style.display = "none"; // 展開後將感應區隱藏，避免干擾
+    };
+
+    // 1. 滑鼠「移入」漢堡按鈕 或 「整個左邊邊緣」時 -> 展開側欄
+    showSidebarBtn.addEventListener("mouseenter", expandSidebar);
+    if (hoverTrigger) hoverTrigger.addEventListener("mouseenter", expandSidebar);
 
     // 2. 滑鼠「移出」整個側欄的範圍時 -> 若「未鎖定」則自動收合
     sidebar.addEventListener("mouseleave", () => {
         if (!isPinned) {
             sidebar.classList.add("collapsed");
             showSidebarBtn.style.display = "flex";
+            if (hoverTrigger) hoverTrigger.style.display = "block"; // 恢復邊緣感應區
         }
     });
     // ============================================
