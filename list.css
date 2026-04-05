@@ -163,27 +163,99 @@ body {
   flex: 1;
   position: relative;
   background-color: var(--bg-main);
-  display: block; /* 改為 block 確保內部絕對定位能計算正確 */
+  display: flex;
+  flex-direction: column;
   overflow: hidden; /* 確保放大縮小的 iframe 不會撐出捲軸 */
+}
+
+/* =========================================
+   分頁列 (Tabs)
+   ========================================= */
+.tabs-container {
+  display: flex;
+  background-color: var(--bg-sidebar); /* 跟隨側邊欄顏色更融洽 */
+  border-bottom: 1px solid var(--border-color);
+  padding: 6px 16px 0 48px; /* 左邊留 48px 給漢堡按鈕的空間 */
+  gap: 6px;
+  overflow-x: auto; /* 允許橫向捲動 */
+  flex-shrink: 0;
+  min-height: 32px; /* 高度縮小 */
+  align-items: flex-end;
+}
+
+.tabs-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tab {
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+  padding: 4px 10px; /* 內距縮小 */
+  border-radius: 8px 8px 0 0; /* 上面圓角 */
+  font-size: 0.85rem; /* 字體縮小 */
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 150px; /* 限制寬度避免太長 */
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.tab.active {
+  background-color: var(--bg-main);
+  color: var(--accent-color);
+  font-weight: bold;
+  border-bottom: 2px solid var(--bg-main);
+  margin-bottom: -1px; /* 蓋過容器底線，視覺上連在一起 */
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.02);
+}
+
+.tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.close-btn {
+  font-size: 0.7rem;
+  color: #999;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #ffcccc;
+  color: #cc0000;
 }
 
 /* 展開側欄的懸浮按鈕 */
 .float-btn {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 4px; /* 微調高度以適應縮小的分頁列 */
+  left: 6px;
   z-index: 20;
   background-color: var(--bg-sidebar);
   border: 1px solid var(--border-color);
   color: var(--accent-color);
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 2px 8px; /* 按鈕變小 */
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1rem; /* 字體微縮 */
   transition: all 0.2s;
 }
 
@@ -192,7 +264,15 @@ body {
   transform: scale(1.05);
 }
 
-#sheet-frame {
+/* iframe 顯示區域 */
+.iframe-container {
+  flex: 1; /* 填滿剩下的高度 */
+  position: relative;
+  overflow: hidden; /* 切割多餘的 25% 內容 */
+}
+
+/* 動態生成的 sheet iframe */
+.sheet-frame {
   /* 使用絕對定位將表格釘在主畫面上方，讓長寬完美依照銀幕展開 */
   position: absolute;
   top: 0;

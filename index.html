@@ -52,13 +52,17 @@
             <button id="show-sidebar" class="float-btn" title="展開選單" style="display: none;">☰</button>
             <div id="hover-trigger" class="hover-trigger" style="display: none;"></div>
 
-            <!-- iframe 用來嵌入 Google Sheet -->
-            <iframe id="sheet-frame" src="" frameborder="0" allowfullscreen title="Google Sheet 預覽"></iframe>
+            <!-- 分頁標籤列 (一開始隱藏) -->
+            <div id="tabs-container" class="tabs-container" style="display: none;"></div>
 
-            <!-- 未選取檔案時的歡迎畫面 -->
-            <div class="welcome-screen" id="welcome-screen">
-                <h3>👋 歡迎使用！</h3>
-                <p>請從左側選單點開資料夾，選擇你想查看的表單。</p>
+            <!-- 實際渲染 Google Sheet 或歡迎畫面的區域 -->
+            <div id="iframe-container" class="iframe-container">
+                <!-- 未選取檔案時的歡迎畫面 -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <h3>👋 歡迎使用！</h3>
+                    <p>請從左側選單點開資料夾，選擇你想查看的表單。</p>
+                </div>
+                <!-- 到時候 Javascript 會把許多 <iframe class="sheet-frame"> 塞進這裡 -->
             </div>
         </main>
     </div>

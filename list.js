@@ -133,8 +133,113 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==============================
 
     const folderTree = document.getElementById("folder-tree");
-    const sheetFrame = document.getElementById("sheet-frame");
+    const iframeContainer = document.getElementById("iframe-container");
+    const tabsContainer = document.getElementById("tabs-container");
     const welcomeScreen = document.getElementById("welcome-screen");
+
+    // ======== 多分頁狀態與管理函式 ========
+    let openedTabs = [];
+    let currentActiveTabId = null;
+
+    function activateTab(tabId) {
+        currentActiveTabId = tabId;
+        openedTabs.forEach(tab => {
+            if (tab.id === tabId) {
+                tab.tabEl.classList.add("active");
+                tab.iframeEl.style.display = "block";
+            } else {
+                tab.tabEl.classList.remove("active");
+                tab.iframeEl.style.display = "none";
+            }
+        });
+    }
+
+    function closeTab(tabId) {
+        const tabIndex = openedTabs.findIndex(t => t.id === tabId);
+        if (tabIndex === -1) return;
+        
+        const tabObj = openedTabs[tabIndex];
+        // 移除 DOM
+        tabObj.tabEl.remove();
+        tabObj.iframeEl.remove();
+        
+        // 從陣列移除
+        openedTabs.splice(tabIndex, 1);
+        
+        // 若關閉的是目前正在顯示的分頁，自動切換到最後一個分頁
+        if (currentActiveTabId === tabId) {
+            if (openedTabs.length > 0) {
+                activateTab(openedTabs[openedTabs.length - 1].id);
+            } else {
+                currentActiveTabId = null;
+                tabsContainer.style.display = "none";
+                welcomeScreen.style.display = "flex"; // 恢復歡迎畫面
+            }
+        }
+    }
+
+    function openTab(name, url) {
+        tabsContainer.style.display = "flex"; // 確保分頁列有顯示
+        welcomeScreen.style.display = "none"; // 隱藏歡迎畫面
+        
+        // 檢查是否已經開過 (透過 URL 判斷)
+        const existingTab = openedTabs.find(t => t.url === url);
+        if (existingTab) {
+            activateTab(existingTab.id); // 已經開過就直接切換過去
+            return;
+        }
+
+        // 沒開過，建立全新的分頁
+        const tabId = "tab_" + Date.now();
+        
+        // 1. 建立標籤 UI
+        const tabEl = document.createElement("div");
+        tabEl.className = "tab";
+        
+        const titleEl = document.createElement("span");
+        titleEl.className = "tab-title";
+        titleEl.innerText = name;
+        titleEl.title = name;
+        
+        const closeBtn = document.createElement("span");
+        closeBtn.className = "close-btn";
+        closeBtn.innerHTML = "✖";
+        closeBtn.title = "關閉分頁";
+        
+        tabEl.appendChild(titleEl);
+        tabEl.appendChild(closeBtn);
+        
+        // 2. 建立 iframe 渲染畫面
+        const iframeEl = document.createElement("iframe");
+        iframeEl.className = "sheet-frame";
+        iframeEl.src = url;
+        iframeEl.frameBorder = "0";
+        iframeEl.allowFullscreen = true;
+        iframeEl.title = name;
+        
+        // 放入畫面中
+        tabsContainer.appendChild(tabEl);
+        iframeContainer.appendChild(iframeEl);
+        
+        // 紀錄到狀態陣列
+        openedTabs.push({
+            id: tabId,
+            url: url,
+            tabEl: tabEl,
+            iframeEl: iframeEl
+        });
+        
+        // 綁定事件
+        tabEl.addEventListener("click", () => activateTab(tabId));
+        closeBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // 阻止點擊事件往上傳遞給 tabEl
+            closeTab(tabId);
+        });
+        
+        // 剛開好就預設讓他成為顯示中
+        activateTab(tabId);
+    }
+    // ======================================
 
     // ======== 側邊欄自動彈出與鎖定功能 ========
     const showSidebarBtn = document.getElementById("show-sidebar");
@@ -221,11 +326,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 sheetLinkEl.classList.add("active");
                 currentActiveLink = sheetLinkEl;
 
-                // 載入網址
+                // 多分頁切換邏輯
                 if (sheet.url) {
-                    welcomeScreen.style.display = "none";
-                    sheetFrame.style.display = "block";
-                    sheetFrame.src = sheet.url;
+                    openTab(sheet.name, sheet.url);
                 } else {
                     alert(`還沒放上「${sheet.name}」的網址喔！請到 list.js 設定。`);
                 }
