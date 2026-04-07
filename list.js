@@ -69,7 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const ALLOWED_IPS = [
         "61.219.113.251", // 公司固定 IP1
         "61.219.113.252", // 公司固定 IP2
-        "1.175.177.14"    // 新增的第二個 IP
+        "1.175.177.14",    // 新增的第二個 IP
+        "1.175.146.55"
     ];
 
     // 驗證帳號密碼與 IP 的非同步函式
@@ -158,15 +159,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function closeTab(tabId) {
         const tabIndex = openedTabs.findIndex(t => t.id === tabId);
         if (tabIndex === -1) return;
-        
+
         const tabObj = openedTabs[tabIndex];
         // 移除 DOM
         tabObj.tabEl.remove();
         tabObj.iframeEl.remove();
-        
+
         // 從陣列移除
         openedTabs.splice(tabIndex, 1);
-        
+
         // 若關閉的是目前正在顯示的分頁，自動切換到最後一個分頁
         if (currentActiveTabId === tabId) {
             if (openedTabs.length > 0) {
@@ -182,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function openTab(name, url) {
         tabsContainer.style.display = "flex"; // 確保分頁列有顯示
         welcomeScreen.style.display = "none"; // 隱藏歡迎畫面
-        
+
         // 檢查是否已經開過 (透過 URL 判斷)
         const existingTab = openedTabs.find(t => t.url === url);
         if (existingTab) {
@@ -192,24 +193,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 沒開過，建立全新的分頁
         const tabId = "tab_" + Date.now();
-        
+
         // 1. 建立標籤 UI
         const tabEl = document.createElement("div");
         tabEl.className = "tab";
-        
+
         const titleEl = document.createElement("span");
         titleEl.className = "tab-title";
         titleEl.innerText = name;
         titleEl.title = name;
-        
+
         const closeBtn = document.createElement("span");
         closeBtn.className = "close-btn";
         closeBtn.innerHTML = "✖";
         closeBtn.title = "關閉分頁";
-        
+
         tabEl.appendChild(titleEl);
         tabEl.appendChild(closeBtn);
-        
+
         // 2. 建立 iframe 渲染畫面
         const iframeEl = document.createElement("iframe");
         iframeEl.className = "sheet-frame";
@@ -217,11 +218,11 @@ document.addEventListener("DOMContentLoaded", () => {
         iframeEl.frameBorder = "0";
         iframeEl.allowFullscreen = true;
         iframeEl.title = name;
-        
+
         // 放入畫面中
         tabsContainer.appendChild(tabEl);
         iframeContainer.appendChild(iframeEl);
-        
+
         // 紀錄到狀態陣列
         openedTabs.push({
             id: tabId,
@@ -229,14 +230,14 @@ document.addEventListener("DOMContentLoaded", () => {
             tabEl: tabEl,
             iframeEl: iframeEl
         });
-        
+
         // 綁定事件
         tabEl.addEventListener("click", () => activateTab(tabId));
         closeBtn.addEventListener("click", (e) => {
             e.stopPropagation(); // 阻止點擊事件往上傳遞給 tabEl
             closeTab(tabId);
         });
-        
+
         // 剛開好就預設讓他成為顯示中
         activateTab(tabId);
     }
