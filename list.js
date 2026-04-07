@@ -33,7 +33,7 @@ const resourceData = [
         icon: "✉️",
         sheets: [
             { name: "鎖房寄信", url: "https://docs.google.com/spreadsheets/d/17LdPMkyVT-xm4LDBwSsOkncCFSpeA4aCBYn44bWFBeI/edit?gid=0#gid=0" },
-            { name: "行程寄信", url: "https://docs.google.com/spreadsheets/d/1UHmxgO2TPIGGMTCL_rmQ0dBcd5j7DQOxKHflpWwJqH4/edit?gid=0#gid=0" }
+            { name: "行程寄信", url: "https://docs.google.com/spreadsheets/d/1UHmxgO2TPIGGMTCL_rmQ0dBcd5j7DQOxKHflpWwJqH4/" }
         ]
     },
     {
@@ -137,6 +137,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const folderTree = document.getElementById("folder-tree");
     const iframeContainer = document.getElementById("iframe-container");
     const tabsContainer = document.getElementById("tabs-container");
+    const tabsHeaderWrapper = document.getElementById("tabs-header-wrapper");
+    const closeAllTabsBtn = document.getElementById("close-all-tabs");
     const welcomeScreen = document.getElementById("welcome-screen");
 
     // ======== 多分頁狀態與管理函式 ========
@@ -174,14 +176,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 activateTab(openedTabs[openedTabs.length - 1].id);
             } else {
                 currentActiveTabId = null;
-                tabsContainer.style.display = "none";
+                tabsHeaderWrapper.style.display = "none";
                 welcomeScreen.style.display = "flex"; // 恢復歡迎畫面
             }
         }
     }
 
+    // 一鍵關閉所有未鎖定的分頁
+    function closeAllTabs() {
+        const tabsToClose = openedTabs.filter(t => !t.isLocked);
+        if (tabsToClose.length === 0) return;
+        
+        // 倒過來刪除以免影響索引
+        [...tabsToClose].reverse().forEach(tab => {
+            closeTab(tab.id);
+        });
+    }
+
+    // 點擊一鍵關閉按鈕
+    if (closeAllTabsBtn) {
+        closeAllTabsBtn.addEventListener("click", closeAllTabs);
+    }
+
     function openTab(name, url) {
-        tabsContainer.style.display = "flex"; // 確保分頁列有顯示
+        tabsHeaderWrapper.style.display = "flex"; // 確保分頁列有顯示
         welcomeScreen.style.display = "none"; // 隱藏歡迎畫面
 
         // 檢查是否已經開過 (透過 URL 判斷)
@@ -191,12 +209,31 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // 檢查分頁上限 (10個)
+        if (openedTabs.length >= 10) {
+            // 尋找第一個「未鎖定」的分頁來關閉
+            const firstUnlockedTab = openedTabs.find(t => !t.isLocked);
+            if (firstUnlockedTab) {
+                closeTab(firstUnlockedTab.id);
+            } else {
+                // 如果全部都被鎖定，告知使用者
+                alert("分頁已滿 10 個且全部皆被鎖定，請先解除鎖定或手動關閉部分分頁。");
+                return;
+            }
+        }
+
         // 沒開過，建立全新的分頁
         const tabId = "tab_" + Date.now();
 
         // 1. 建立標籤 UI
         const tabEl = document.createElement("div");
         tabEl.className = "tab";
+
+        // --- 鎖定按鈕 ---
+        const lockBtn = document.createElement("span");
+        lockBtn.className = "lock-btn";
+        lockBtn.innerHTML = "🔓";
+        lockBtn.title = "鎖定分頁 (避免關閉)";
 
         const titleEl = document.createElement("span");
         titleEl.className = "tab-title";
@@ -208,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
         closeBtn.innerHTML = "✖";
         closeBtn.title = "關閉分頁";
 
+        tabEl.appendChild(lockBtn);
         tabEl.appendChild(titleEl);
         tabEl.appendChild(closeBtn);
 
@@ -223,12 +261,31 @@ document.addEventListener("DOMContentLoaded", () => {
         tabsContainer.appendChild(tabEl);
         iframeContainer.appendChild(iframeEl);
 
-        // 紀錄到狀態陣列
-        openedTabs.push({
+        // 建立分頁物件
+        const tabObj = {
             id: tabId,
             url: url,
             tabEl: tabEl,
-            iframeEl: iframeEl
+            iframeEl: iframeEl,
+            isLocked: false
+        };
+
+        // 紀錄到狀態陣列
+        openedTabs.push(tabObj);
+
+        // 鎖定切換事件
+        lockBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            tabObj.isLocked = !tabObj.isLocked;
+            if (tabObj.isLocked) {
+                lockBtn.innerHTML = "📌";
+                lockBtn.classList.add("locked");
+                lockBtn.title = "取消鎖定";
+            } else {
+                lockBtn.innerHTML = "🔓";
+                lockBtn.classList.remove("locked");
+                lockBtn.title = "鎖定分頁";
+            }
         });
 
         // 綁定事件
@@ -303,8 +360,35 @@ document.addEventListener("DOMContentLoaded", () => {
         // 建立資料夾標題
         const folderTitle = document.createElement("div");
         folderTitle.className = "folder-title";
-        folderTitle.innerHTML = `<span>${folder.icon}</span> &nbsp;${folder.target}`;
+        
+        // 文字與圖示包裹
+        const titleText = document.createElement("div");
+        titleText.style.display = "flex";
+        titleText.style.alignItems = "center";
+        titleText.innerHTML = `<span>${folder.icon}</span> &nbsp;${folder.target}`;
+        folderTitle.appendChild(titleText);
+
+        // 資料夾批次開啟按鈕
+        const batchOpenBtn = document.createElement("button");
+        batchOpenBtn.className = "batch-open-btn";
+        batchOpenBtn.innerText = "🚀 全部開啟";
+        batchOpenBtn.title = "開啟此資料夾內的所有表單";
+        folderTitle.appendChild(batchOpenBtn);
+
         folderEl.appendChild(folderTitle);
+
+        // 點擊資料夾標題（文字區塊）才開啟資料夾
+        titleText.addEventListener("click", () => {
+            folderEl.classList.toggle("open");
+        });
+
+        // 點擊批次開啟按鈕
+        batchOpenBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // 防止觸發資料夾收合
+            folder.sheets.forEach(sheet => {
+                if (sheet.url) openTab(sheet.name, sheet.url);
+            });
+        });
 
         // 資料夾內容容器
         const sheetGroup = document.createElement("div");
@@ -340,9 +424,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // 點擊資料夾標題時才展開/收合
-        folderTitle.addEventListener("click", () => {
-            folderEl.classList.toggle("open");
-        });
+        // folderTitle.addEventListener("click", () => {
+        //     folderEl.classList.toggle("open");
+        // });
 
         // 將內容組裝起來
         folderEl.appendChild(sheetGroup);

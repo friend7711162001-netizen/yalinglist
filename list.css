@@ -124,11 +124,34 @@ body {
 .folder-title {
   color: var(--text-main);
   font-size: 1rem;
+  justify-content: space-between; /* 讓文字與批次按鈕分開 */
 }
 
 .folder-title:hover, .sheet-link:hover {
   background-color: var(--hover-color);
-  transform: translateX(4px);
+  /* transform: translateX(4px); 移除位移以免影響右側按鈕 */
+}
+
+.batch-open-btn {
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  background-color: var(--accent-color);
+  color: white;
+  border-radius: 4px;
+  opacity: 0; /* 預設隱藏，滑入才顯示 */
+  transition: opacity 0.2s, transform 0.2s;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.folder-title:hover .batch-open-btn {
+  opacity: 1;
+}
+
+.batch-open-btn:hover {
+  transform: scale(1.1);
+  background-color: #f06a44;
 }
 
 /* 檔案內容往內縮 */
@@ -185,14 +208,20 @@ body {
 /* =========================================
    分頁列 (Tabs)
    ========================================= */
-.tabs-container {
+.tabs-header-wrapper {
   display: flex;
   background-color: var(--bg-sidebar); /* 跟隨側邊欄顏色更融洽 */
   border-bottom: 1px solid var(--border-color);
-  padding: 6px 16px 0 48px; /* 左邊留 48px 給漢堡按鈕的空間 */
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.tabs-container {
+  display: flex;
+  flex: 1;
+  padding: 6px 4px 0 48px; /* 左邊留 48px 給漢堡按鈕的空間 */
   gap: 6px;
   overflow-x: auto; /* 允許橫向捲動 */
-  flex-shrink: 0;
   min-height: 32px; /* 高度縮小 */
   align-items: flex-end;
 }
@@ -212,9 +241,10 @@ body {
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  max-width: 150px; /* 限制寬度避免太長 */
+  gap: 6px; /* 縮小間距 */
+  max-width: 160px; /* 稍微增加寬度以容納鎖定鈕 */
   transition: all 0.2s;
+  position: relative;
 }
 
 .tab:hover {
@@ -250,6 +280,46 @@ body {
 
 .close-btn:hover {
   background-color: #ffcccc;
+  color: #cc0000;
+}
+
+/* 鎖定按鈕樣式 */
+.lock-btn {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.lock-btn:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.lock-btn.locked {
+  opacity: 1;
+  color: var(--accent-color);
+}
+
+/* 一鍵關閉按鈕樣式 */
+.close-all-btn {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 12px;
+  margin-bottom: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.close-all-btn:hover {
+  background-color: #ffcccc;
+  border-color: #ff8b8b;
   color: #cc0000;
 }
 

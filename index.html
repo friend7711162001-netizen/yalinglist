@@ -7,7 +7,7 @@
     <title>飯店管理系統</title>
     
     <!-- 網頁分頁上的可愛小 Icon (Favicon) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏨</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><defs><linearGradient id=%22metal%22 x1=%220%%22 y1=%220%%22 x2=%22100%%22 y2=%22100%%22><stop offset=%220%%22 stop-color=%22%23ffffff%22/><stop offset=%2250%%22 stop-color=%22%23e2e8f0%22/><stop offset=%22100%%22 stop-color=%22%23cbd5e1%22/></linearGradient><radialGradient id=%22shadow%22 cx=%2250%%22 cy=%2250%%22 r=%2250%%22><stop offset=%220%%22 stop-color=%22rgba(0,0,0,0.15)%22/><stop offset=%22100%%22 stop-color=%22rgba(0,0,0,0)%22/></radialGradient></defs><circle cx=%2250%22 cy=%2250%22 r=%2246%22 fill=%22%23FFE2D1%22 /><circle cx=%2250%22 cy=%2250%22 r=%2242%22 fill=%22none%22 stroke=%22%23FFB088%22 stroke-width=%222%22 stroke-dasharray=%224 4%22 /><ellipse cx=%2250%22 cy=%2278%22 rx=%2225%22 ry=%225%22 fill=%22url(%23shadow)%22 /><rect x=%2222%22 y=%2270%22 width=%2256%22 height=%226%22 rx=%223%22 fill=%22%2364748B%22 /><rect x=%2224%22 y=%2270%22 width=%2252%22 height=%222%22 fill=%22%2394A3B8%22 /><path d=%22M 28 70 A 22 22 0 0 1 72 70 Z%22 fill=%22url(%23metal)%22 /><path d=%22M 32 60 Q 37 50 48 49%22 fill=%22none%22 stroke=%22%23ffffff%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 opacity=%220.8%22 /><rect x=%2247.5%22 y=%2238%22 width=%225%22 height=%2210%22 fill=%22%2394A3B8%22 /><circle cx=%2250%22 cy=%2235%22 r=%225%22 fill=%22%23FF5C5C%22 /><circle cx=%2248.5%22 cy=%2233.5%22 r=%221.5%22 fill=%22%23ffffff%22 opacity=%220.8%22 /><circle cx=%2240%22 cy=%2258%22 r=%223%22 fill=%22%23475569%22 /><circle cx=%2260%22 cy=%2258%22 r=%223%22 fill=%22%23475569%22 /><ellipse cx=%2232%22 cy=%2261%22 rx=%224%22 ry=%222.5%22 fill=%22%23FF8BA7%22 opacity=%220.7%22 /><ellipse cx=%2268%22 cy=%2261%22 rx=%224%22 ry=%222.5%22 fill=%22%23FF8BA7%22 opacity=%220.7%22 /><path d=%22M 46 61 Q 50 65 54 61%22 fill=%22none%22 stroke=%22%23475569%22 stroke-width=%222.5%22 stroke-linecap=%22round%22 /><path d=%22M 22 35 Q 26 35 26 31 Q 26 35 30 35 Q 26 35 26 39 Q 26 35 22 35 Z%22 fill=%22%23FFA500%22 /><path d=%22M 72 45 Q 75 45 75 42 Q 75 45 78 45 Q 75 45 75 48 Q 75 45 72 45 Z%22 fill=%22%23FFA500%22 /></svg>">
     
     <link rel="stylesheet" href="list.css">
     <!-- 引入 Google Fonts 添加現代活潑的圓潤字體 -->
@@ -90,7 +90,10 @@
             <div id="hover-trigger" class="hover-trigger" style="display: none;"></div>
 
             <!-- 分頁標籤列 (一開始隱藏) -->
-            <div id="tabs-container" class="tabs-container" style="display: none;"></div>
+            <div id="tabs-header-wrapper" class="tabs-header-wrapper" style="display: none;">
+                <div id="tabs-container" class="tabs-container"></div>
+                <button id="close-all-tabs" class="close-all-btn">🧹 一鍵關閉</button>
+            </div>
 
             <!-- 實際渲染 Google Sheet 或歡迎畫面的區域 -->
             <div id="iframe-container" class="iframe-container">
