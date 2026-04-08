@@ -78,8 +78,8 @@
             </nav>
             
             <div class="sidebar-footer">
-                <p>版本 v2.0</p>
-                <p>更新: 2026/04/05</p>
+                <p>版本 v2.1</p>
+                <p>更新: 2026/04/08</p>
             </div>
         </aside>
 
@@ -92,7 +92,10 @@
             <!-- 分頁標籤列 (一開始隱藏) -->
             <div id="tabs-header-wrapper" class="tabs-header-wrapper" style="display: none;">
                 <div id="tabs-container" class="tabs-container"></div>
-                <button id="close-all-tabs" class="close-all-btn">🧹 一鍵關閉</button>
+                <div class="tabs-actions">
+                    <button id="refresh-all-tabs" class="refresh-all-btn" title="重新整理所有分頁">🔄 全部重整</button>
+                    <button id="close-all-tabs" class="close-all-btn" title="關閉所有未鎖定的分頁">🧹 一鍵關閉</button>
+                </div>
             </div>
 
             <!-- 實際渲染 Google Sheet 或歡迎畫面的區域 -->

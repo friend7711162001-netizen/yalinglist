@@ -301,8 +301,17 @@ body {
   color: var(--accent-color);
 }
 
+/* 一鍵關閉與重整按鈕容器 */
+.tabs-actions {
+  display: flex;
+  gap: 8px;
+  padding-right: 12px;
+  padding-bottom: 6px;
+  align-self: flex-end;
+}
+
 /* 一鍵關閉按鈕樣式 */
-.close-all-btn {
+.close-all-btn, .refresh-all-btn {
   background-color: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-muted);
@@ -310,17 +319,20 @@ body {
   padding: 2px 8px;
   border-radius: 6px;
   cursor: pointer;
-  margin-right: 12px;
-  margin-bottom: 6px;
   transition: all 0.2s;
   white-space: nowrap;
-  align-self: flex-end;
 }
 
 .close-all-btn:hover {
   background-color: #ffcccc;
   border-color: #ff8b8b;
   color: #cc0000;
+}
+
+.refresh-all-btn:hover {
+  background-color: #e0f2fe;
+  border-color: #7dd3fc;
+  color: #0369a1;
 }
 
 /* 展開側欄的懸浮按鈕 */

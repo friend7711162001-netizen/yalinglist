@@ -69,8 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const ALLOWED_IPS = [
         "61.219.113.251", // 公司固定 IP1
         "61.219.113.252", // 公司固定 IP2
-        "1.175.177.14",    // 新增的第二個 IP
-        "1.175.146.55"
+        "1.175.177.14",    // 董家
+        "1.175.146.55",  // 董家
+        "114.47.162.40"   //民宿
     ];
 
     // 驗證帳號密碼與 IP 的非同步函式
@@ -139,7 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const tabsContainer = document.getElementById("tabs-container");
     const tabsHeaderWrapper = document.getElementById("tabs-header-wrapper");
     const closeAllTabsBtn = document.getElementById("close-all-tabs");
+    const refreshAllTabsBtn = document.getElementById("refresh-all-tabs");
     const welcomeScreen = document.getElementById("welcome-screen");
+
+    const SMAR_UPDATE_INTERVAL = 30 * 60 * 1000; // 30 分鐘 (毫秒)
 
     // ======== 多分頁狀態與管理函式 ========
     let openedTabs = [];
@@ -193,10 +197,49 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // 一鍵重整所有分頁
+    function refreshAllTabs() {
+        if (openedTabs.length === 0) return;
+        
+        openedTabs.forEach(tab => {
+            const oldSrc = tab.iframeEl.src;
+            tab.iframeEl.src = ""; // 先清空確保重載
+            tab.iframeEl.src = oldSrc;
+            tab.lastUpdated = Date.now();
+        });
+        
+        console.log("🔄 所有分頁已重整");
+    }
+
     // 點擊一鍵關閉按鈕
     if (closeAllTabsBtn) {
         closeAllTabsBtn.addEventListener("click", closeAllTabs);
     }
+
+    // 點擊一鍵重整按鈕
+    if (refreshAllTabsBtn) {
+        refreshAllTabsBtn.addEventListener("click", refreshAllTabs);
+    }
+
+    // 智慧型更新：回到焦點時檢查
+    window.addEventListener("focus", () => {
+        if (!currentActiveTabId) return;
+
+        const now = Date.now();
+        const activeTab = openedTabs.find(t => t.id === currentActiveTabId);
+        
+        if (activeTab && activeTab.lastUpdated) {
+            const timePassed = now - activeTab.lastUpdated;
+            if (timePassed > SMAR_UPDATE_INTERVAL) {
+                console.log(`🧠 智慧型更新：距離上次更新已過 ${Math.round(timePassed/1000/60)} 分鐘，正在重整...`);
+                // 重新整理當前分頁
+                const oldSrc = activeTab.iframeEl.src;
+                activeTab.iframeEl.src = "";
+                activeTab.iframeEl.src = oldSrc;
+                activeTab.lastUpdated = now;
+            }
+        }
+    });
 
     function openTab(name, url) {
         tabsHeaderWrapper.style.display = "flex"; // 確保分頁列有顯示
@@ -267,7 +310,8 @@ document.addEventListener("DOMContentLoaded", () => {
             url: url,
             tabEl: tabEl,
             iframeEl: iframeEl,
-            isLocked: false
+            isLocked: false,
+            lastUpdated: Date.now() // 紀錄建立時間
         };
 
         // 紀錄到狀態陣列
